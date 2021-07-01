@@ -1,5 +1,12 @@
+body {
+  background: #f3f7fa;
+}
+
 .navbar {
   margin-bottom: 20px;
+  background: white;
+  padding-bottom: 20px;
+  box-shadow: 0px 1px 2px 2px rgba(0, 0, 0, 0.2);
 }
 
 .navbar > div {
@@ -9,34 +16,40 @@
 
 .navbar > h2 {
   text-align: center;
+  margin: 0;
+  padding: 20px 0px;
+  color: #64d764;
 }
 
 .nav {
   border: none;
   padding: 10px 15px;
-  border-bottom: 2px solid black;
-  background: white;
+  border-bottom: 2px solid #64d764;
   text-decoration: none;
-  color: black;
+  color: #214e21;
+  font-weight: 600;
   width: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 5px;
 }
 
 .nav:hover {
-  background: #eee;
+  background: #a9facd;
 }
 
 .nav__selected {
-  background: #e9e9e9;
+  background: #d2fce5;
+  border-bottom: 2px solid #64d764;
 }
 
 .form--card {
   margin: 50px auto;
   padding: 25px;
   max-width: 600px;
-  border: 1px solid #aaa;
+  border: 1px solid #a9facd;
   border-radius: 20px;
-  box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 3px 3px 1px rgba(126, 247, 110, 0.2);
+  background: white;
 }

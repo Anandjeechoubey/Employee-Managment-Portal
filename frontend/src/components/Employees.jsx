@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -14,7 +14,14 @@ import IconButton from '@material-ui/core/IconButton';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import LastPageIcon from '@material-ui/icons/LastPage';
+import Axios from 'axios';
+import { Link } from 'react-router-dom';
+
+import InputBase from '@material-ui/core/InputBase';
+import SearchIcon from '@material-ui/icons/Search';
 
 const useStyles1 = makeStyles((theme) => ({
   root: {
@@ -81,33 +88,61 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-function createData(name, salary, gender, id, test, address ) {
-  return { name, salary, gender, id, test, address };
-}
+// function createData(name, salary, gender, id, test, address) {
+//   return { name, salary, gender, id, test, address };
+// }
 
-const rows = [
-  createData('Cupcake', 305, 3.7, 1, 'test1', 'banglore'),
-  createData('Donut', 452, 25.0, 2, 'test2', 'delhi'),
-  createData('Eclair', 262, 16.0, 1, 'test1', 'banglore'),
-  createData('Frozen yoghurt', 159, 6.0, 1, 'test1', 'banglore'),
-  createData('Gingerbread', 356, 16.0, 1, 'test1', 'banglore'),
-  createData('Honeycomb', 408, 3.2, 1, 'test1', 'banglore'),
-  createData('Ice cream sandwich', 237, 9.0, 1, 'test1', 'banglore'),
-  createData('Jelly Bean', 375, 0.0, 1, 'test1', 'banglore'),
-  createData('KitKat', 518, 26.0, 1, 'test1', 'banglore'),
-  createData('Lollipop', 392, 0.2, 1, 'test1', 'banglore'),
-  createData('Marshmallow', 318, 0, 1, 'test1', 'banglore'),
-  createData('Nougat', 360, 19.0, 1, 'test1', 'banglore'),
-  createData('Oreo', 437, 18.0, 1, 'test1', 'banglore'),
-].sort((a, b) => (a.salary < b.salary ? -1 : 1));
+// const rows = [
+//   createData('Cupcake', 305, 3.7, 1, 'test1', 'banglore'),
+//   createData('Donut', 452, 25.0, 2, 'test2', 'delhi'),
+//   createData('Eclair', 262, 16.0, 1, 'test1', 'banglore'),
+//   createData('Frozen yoghurt', 159, 6.0, 1, 'test1', 'banglore'),
+//   createData('Gingerbread', 356, 16.0, 1, 'test1', 'banglore'),
+//   createData('Honeycomb', 408, 3.2, 1, 'test1', 'banglore'),
+//   createData('Ice cream sandwich', 237, 9.0, 1, 'test1', 'banglore'),
+//   createData('Jelly Bean', 375, 0.0, 1, 'test1', 'banglore'),
+//   createData('KitKat', 518, 26.0, 1, 'test1', 'banglore'),
+//   createData('Lollipop', 392, 0.2, 1, 'test1', 'banglore'),
+//   createData('Marshmallow', 318, 0, 1, 'test1', 'banglore'),
+//   createData('Nougat', 360, 19.0, 1, 'test1', 'banglore'),
+//   createData('Oreo', 437, 18.0, 1, 'test1', 'banglore'),
+// ].sort((a, b) => (a.salary < b.salary ? -1 : 1));
+
+//const rows = Axios.get('http://localhost:8000/api/employee/')
+
+
+
 
 const useStyles2 = makeStyles({
   table: {
     minWidth: 500,
   },
+  root: {
+    padding: '2px 4px',
+    display: 'flex',
+    alignItems: 'center',
+    width: 400,
+    margin: '10px auto',
+  },
+  input: {
+    flex: 1,
+  },
+  iconButton: {
+    padding: 10,
+  },
 });
 
 const Employees = () => {
+  const [rows, setRows] = React.useState([])
+  const [search, setSearch] = React.useState('')
+  useEffect(() => {
+    // GET request using axios inside useEffect React hook
+    Axios.get('http://localhost:8000/api/employee/?q='+ search)
+      .then(response => setRows(response.data));
+
+    // empty dependency array means this effect will only run once (like componentDidMount in classes)
+  }, [search]);
+
   const classes = useStyles2();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -123,8 +158,24 @@ const Employees = () => {
     setPage(0);
   };
 
+  const handleDelete = (id) => {
+    Axios.delete('http://localhost:8000/api/employee/' + id)
+      .then(window.location.reload())
+  }
+
   return (
     <div className="form--card">
+      <Paper component="form" className={classes.root}>
+        <InputBase
+          className={classes.input}
+          placeholder="Search Employee By Name"
+          inputProps={{ 'aria-label': 'search employees' }}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <IconButton type="submit" className={classes.iconButton} aria-label="search">
+          <SearchIcon />
+        </IconButton>
+      </Paper>
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="custom pagination table">
           <TableHead>
@@ -133,8 +184,9 @@ const Employees = () => {
               <TableCell>Name</TableCell>
               <TableCell>Gender</TableCell>
               <TableCell>Salary</TableCell>
-              <TableCell>Test</TableCell>
+              <TableCell>Team</TableCell>
               <TableCell>Address</TableCell>
+              <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -156,10 +208,16 @@ const Employees = () => {
                   {row.salary}
                 </TableCell>
                 <TableCell style={{ width: 60 }}>
-                  {row.test}
+                  {row.team}
                 </TableCell>
                 <TableCell style={{ width: 60 }}>
                   {row.address}
+                </TableCell>
+                <TableCell style={{ width: 60 }}>
+                  <Link to={"update/" + row.id}>
+                    <EditIcon style={{ color: 'green' }} />
+                  </Link>
+                  <DeleteIcon onClick={() => handleDelete(row.id)} style={{ color: 'red' }} />
                 </TableCell>
               </TableRow>
             ))}
