@@ -46,7 +46,10 @@ class ListEmployeesView(generics.ListAPIView):
         q = query_params.get('q','')
         limit = int(query_params.get('limit', 5))
         offset = int(query_params.get('offset', 0))
-        queryset = Employee.objects.filter(name__icontains=q)[offset: offset + limit]
+        if offset == 0:
+            queryset = Employee.objects.filter(name__icontains=q)[offset: offset + 2*limit]
+        else:
+            queryset = Employee.objects.filter(name__icontains=q)[offset - limit: offset + 2*limit]
         return queryset
 
 @ensure_csrf_cookie

@@ -25,7 +25,7 @@ import SearchIcon from '@material-ui/icons/Search';
 
 const useStyles1 = makeStyles((theme) => ({
   root: {
-    flexShrink: 0,
+    display: 'flex',
     marginLeft: theme.spacing(2.5),
   },
 }));
@@ -53,13 +53,13 @@ function TablePaginationActions(props) {
 
   return (
     <div className={classes.root}>
-      <IconButton
+      {/* <IconButton
         onClick={handleFirstPageButtonClick}
         disabled={page === 0}
         aria-label="first page"
       >
         {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
-      </IconButton>
+      </IconButton> */}
       <IconButton onClick={handleBackButtonClick} disabled={page === 0} aria-label="previous page">
         {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
       </IconButton>
@@ -70,13 +70,13 @@ function TablePaginationActions(props) {
       >
         {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
       </IconButton>
-      <IconButton
+      {/* <IconButton
         onClick={handleLastPageButtonClick}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label="last page"
       >
         {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
-      </IconButton>
+      </IconButton> */}
     </div>
   );
 }
@@ -229,8 +229,7 @@ const Employees = () => {
               </TableRow>
             )}
           </TableBody>
-          <TableFooter>
-            <TableRow>
+        </Table>
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                 colSpan={3}
@@ -245,9 +244,6 @@ const Employees = () => {
                 onChangeRowsPerPage={handleChangeRowsPerPage}
                 ActionsComponent={TablePaginationActions}
               />
-            </TableRow>
-          </TableFooter>
-        </Table>
       </TableContainer>
     </div>
   );
