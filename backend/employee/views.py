@@ -44,7 +44,9 @@ class ListEmployeesView(generics.ListAPIView):
     def get_queryset(self):
         query_params = self.request.query_params
         q = query_params.get('q','')
-        queryset = Employee.objects.filter(name__icontains=q)
+        limit = int(query_params.get('limit', 5))
+        offset = int(query_params.get('offset', 0))
+        queryset = Employee.objects.filter(name__icontains=q)[offset: offset + limit]
         return queryset
 
 @ensure_csrf_cookie

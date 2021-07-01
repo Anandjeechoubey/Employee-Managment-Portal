@@ -135,17 +135,18 @@ const useStyles2 = makeStyles({
 const Employees = () => {
   const [rows, setRows] = React.useState([])
   const [search, setSearch] = React.useState('')
-  useEffect(() => {
-    // GET request using axios inside useEffect React hook
-    Axios.get('http://localhost:8000/api/employee/?q='+ search)
-      .then(response => setRows(response.data));
-
-    // empty dependency array means this effect will only run once (like componentDidMount in classes)
-  }, [search]);
-
+  
   const classes = useStyles2();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  useEffect(() => {
+    // GET request using axios inside useEffect React hook
+    Axios.get('http://localhost:8000/api/employee/?q='+ search + '&limit='+ rowsPerPage + '&offset=' + page*rowsPerPage)
+      .then(response => setRows(response.data));
+
+    // empty dependency array means this effect will only run once (like componentDidMount in classes)
+  }, [search, page, rowsPerPage]);
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
